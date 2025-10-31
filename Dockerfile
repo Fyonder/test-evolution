@@ -2,7 +2,6 @@
 FROM node:20-alpine
 
 # Define variáveis principais do ambiente
-ENV NODE_ENV=production
 ENV PORT=8080
 ENV AUTHENTICATION_API_KEY=sua_chave_aqui
 # Adicione outras ENV necessárias para Evolution API, como DB, etc.
@@ -24,7 +23,10 @@ WORKDIR /usr/local/app
 RUN git clone https://github.com/EvolutionAPI/evolution-api.git . \
   && git checkout main \
   && npm ci --silent \
-  && npm run build
+  && npm run build \
+  && npm prune --production
+
+ENV NODE_ENV=production
 
 # Expõe a porta padrão da Evolution API
 EXPOSE 8080
