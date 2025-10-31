@@ -1,45 +1,23 @@
 # ==============================
-# Dockerfile - Evolution API
+# Dockerfile para Evolution API (pré-compilada)
 # ==============================
 FROM node:20-alpine
 
-# Instala dependências básicas
-RUN apk add --no-cache git bash python3 make g++
+# Instala git e bash
+RUN apk add --no-cache git bash
 
-# Define diretório de trabalho
+# Cria diretório da aplicação
 WORKDIR /app
 
-# ==============================
-# Clona o repositório na branch main
-# ==============================
+# Clona a branch principal (que já inclui build compilado em dist/)
 RUN git clone https://github.com/EvolutionAPI/evolution-api.git . \
     && git checkout main
 
-# ==============================
-# Instala dependências NPM
-# ==============================
+# Instala dependências (não precisa gerar Prisma)
 RUN npm install --legacy-peer-deps
 
-# ==============================
-# Gera Prisma Client se schema existir
-# ==============================
-RUN if [ -f "./prisma/schema.prisma" ]; then \
-        npx prisma generate --schema=./prisma/schema.prisma; \
-    else \
-        echo "Prisma schema não encontrado, ignorando geração do client"; \
-    fi
-
-# ==============================
-# Compila TypeScript
-# ==============================
-RUN npm run build
-
-# ==============================
-# Porta exposta
-# ==============================
+# Expõe porta padrão da API
 EXPOSE 8080
 
-# ==============================
-# Comando para iniciar a API
-# ==============================
-CMD ["npm", "start"]
+# Inicia o servidor diretamente do dist
+CMD ["node", "dist/index.js"]

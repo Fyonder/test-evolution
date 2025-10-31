@@ -9,7 +9,7 @@ services:
       - key: PORT
         value: 8080
       - key: DATABASE_URL
-        value: "file:./database.db"
+        value: "file:./database.db"  # SQLite local ou Postgres
       - key: WA_MULTI_DEVICE
         value: "true"
       - key: WEBHOOK_URL
