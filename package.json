@@ -2,9 +2,9 @@
   "name": "evolution-deploy",
   "version": "1.0.0",
   "scripts": {
-    "start": "./start.sh"
+    "start": "npx evolution-api --config evolution.config.json"
   },
   "dependencies": {
-    "evolution-api": "github:EvolutionAPI/evolution-api"
+    "evolution-api": "latest"
   }
 }
