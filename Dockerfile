@@ -4,39 +4,30 @@
 FROM node:20-alpine
 
 # Instala dependências básicas
-RUN apk add --no-cache git bash python3 make g++ curl
+RUN apk add --no-cache git bash python3 make g++
 
 # Define diretório de trabalho
 WORKDIR /app
 
 # ==============================
-# Clona o repositório e branch correta
+# Clona o repositório na branch main
 # ==============================
 RUN git clone https://github.com/EvolutionAPI/evolution-api.git . \
-    && git fetch origin evolution:evolution \
-    && git checkout evolution
+    && git checkout main
 
-# ==============================
-# Instala dependências e Prisma
 # ==============================
 # Instala dependências NPM
+# ==============================
 RUN npm install --legacy-peer-deps
 
-# Instala Prisma CLI globalmente (versão compatível)
-RUN npm install -g prisma@4.17.0 @prisma/client@4.17.0
-
 # ==============================
-# Configura banco de dados
+# Gera Prisma Client se schema existir
 # ==============================
-# Se for SQLite, cria o arquivo local
-RUN mkdir -p ./prisma \
-    && touch ./database.db
-
-# Configura variável DATABASE_URL default se não existir
-ENV DATABASE_URL="file:./database.db"
-
-# Gera Prisma Client
-RUN npx prisma generate --schema=./prisma/schema.prisma || echo "Prisma schema não encontrado, verifique a branch evolution"
+RUN if [ -f "./prisma/schema.prisma" ]; then \
+        npx prisma generate --schema=./prisma/schema.prisma; \
+    else \
+        echo "Prisma schema não encontrado, ignorando geração do client"; \
+    fi
 
 # ==============================
 # Compila TypeScript
