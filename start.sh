@@ -1,3 +1,3 @@
 #!/bin/bash
 echo "🚀 Iniciando Evolution API..."
-npx evolution-api start --config evolution.config.json
+node ./node_modules/evolution-api/start.js --config evolution.config.json
