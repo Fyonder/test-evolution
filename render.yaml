@@ -1,15 +1,78 @@
+blueprint:
+  name: evolution-api-setup
 services:
   - type: web
-    name: n8n-evolution
-    env: docker
-    plan: free
-    autoDeploy: true
+    name: evolution-api
+    runtime: image
+    image:
+      url: atendai/evolution-api:v2.1.1
+    plan: starter  # Ou 'free' para testes, mas pode ter limites
+    branch: main  # Não necessário para imagem pública
+    ports:
+      - 8080
     envVars:
-      - key: N8N_ENCRYPTION_KEY
-        value: sua_chave_segura_aqui
-      - key: N8N_BASIC_AUTH_ACTIVE
+      - key: AUTHENTICATION_API_KEY
+        value: sua_chave_secreta_aqui  # Gere uma chave forte
+      - key: SERVER_URL
+        value: https://seu-dominio.onrender.com  # Substitua pelo domínio do Render
+      - key: DEL_INSTANCE
+        value: false
+      - key: DATABASE_ENABLED
         value: true
-      - key: N8N_BASIC_AUTH_USER
-        value: admin
-      - key: N8N_BASIC_AUTH_PASSWORD
-        value: senhaSegura
+      - key: DATABASE_PROVIDER
+        value: postgresql
+      - key: DATABASE_CONNECTION_URI
+        fromDatabase:
+          name: evolution-db
+          property: connectionString
+      - key: DATABASE_SAVE_DATA_INSTANCE
+        value: true
+      - key: DATABASE_SAVE_DATA_NEW_MESSAGE
+        value: true
+      - key: DATABASE_SAVE_MESSAGE_UPDATE
+        value: true
+      - key: DATABASE_SAVE_DATA_CONTACTS
+        value: true
+      - key: DATABASE_SAVE_DATA_CHATS
+        value: true
+      - key: DATABASE_SAVE_DATA_LABELS
+        value: true
+      - key: DATABASE_SAVE_DATA_HISTORIC
+        value: true
+      - key: DATABASE_CONNECTION_CLIENT_NAME
+        value: evolution_api
+      - key: RABBITMQ_ENABLED
+        value: false  # Desative se não usar
+      - key: CACHE_REDIS_ENABLED
+        value: true
+      - key: CACHE_REDIS_URI
+        fromService:
+          type: redis
+          name: evolution-redis
+          property: connectionString
+      - key: CACHE_REDIS_PREFIX_KEY
+        value: evolution
+      - key: CACHE_REDIS_SAVE_INSTANCES
+        value: false
+      - key: CACHE_LOCAL_ENABLED
+        value: false
+      - key: S3_ENABLED
+        value: false  # Ative se precisar de S3 para storage
+      # Adicione mais variáveis do .env.example se necessário: https://github.com/EvolutionAPI/evolution-api/blob/main/.env.example
+    disks:
+      - name: evolution-instances
+        mountPath: /evolution/instances
+        sizeGB: 1  # Ajuste o tamanho conforme necessário
+  - type: pgsql
+    name: evolution-db
+    ipAllowList: []  # Acesso apenas interno
+    plan: starter
+    version: 15  # Versão PostgreSQL compatível
+    disk:
+      name: pg-data
+      mountPath: /var/lib/postgresql/data
+      sizeGB: 1
+  - type: redis
+    name: evolution-redis
+    ipAllowList: []  # Acesso apenas interno
+    plan: starter
