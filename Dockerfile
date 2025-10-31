@@ -1,4 +1,4 @@
-FROM node:18.18.2-slim
+FROM node:20-slim
 
 WORKDIR /usr/evolution
 
@@ -50,8 +50,6 @@ RUN apt-get update && \
     lsb-release \
     xdg-utils \
     && rm -rf /var/lib/apt/lists/*
-
-RUN npm install -g npm@latest
 
 RUN npm install
 
