@@ -1,16 +1,14 @@
-evolution-api-render
-├── src
-│   ├── config
-│   │   └── environment.ts
-│   ├── instances
-│   │   └── index.ts
-│   ├── routes
-│   │   └── api.routes.ts
-│   └── server.ts
-├── .env
-├── .gitignore
-├── Dockerfile
-├── docker-compose.yml
-├── package.json
-├── tsconfig.json
-└── README.md
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+EXPOSE 8080
+
+CMD ["npm", "start"]
