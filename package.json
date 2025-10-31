@@ -1,13 +1,10 @@
 {
-  "name": "evolution-render",
+  "name": "evolution-deploy",
   "version": "1.0.0",
-  "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "./start.sh"
   },
   "dependencies": {
-    "@evolution-api/core": "latest",
-    "express": "^4.18.2",
-    "dotenv": "^16.0.3"
+    "evolution-api": "github:EvolutionAPI/evolution-api"
   }
 }
