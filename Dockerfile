@@ -1,18 +1,25 @@
+# Use Node 20 Alpine
 FROM node:20-alpine
 
-RUN apk add --no-cache git
+# Instala git e dependências básicas
+RUN apk add --no-cache git bash python3 make g++
 
-# Clona a Evolution API (branch principal)
-RUN git clone https://github.com/EvolutionAPI/evolution-api.git /app
-
+# Define diretório de trabalho
 WORKDIR /app
 
-# Instala dependências
+# Clona a Evolution API (branch principal)
+RUN git clone https://github.com/EvolutionAPI/evolution-api.git .
+
+# Instala dependências do projeto
 RUN npm install --legacy-peer-deps
 
-# Compila
+# Gera o client do Prisma antes de compilar
+RUN npx prisma generate
+
+# Compila o TypeScript
 RUN npm run build
 
+# Exposição da porta
 EXPOSE 8080
 
 # Inicia o servidor
