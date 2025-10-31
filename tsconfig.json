@@ -1,37 +1,14 @@
 {
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "declaration": true,
-    "target": "es2020",
-    "module": "CommonJS",
-    "rootDir": "./",
-    "resolveJsonModule": true,
-    "removeComments": true,
-    "outDir": "./dist",
-    "noEmitOnError": true,
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": false,
     "skipLibCheck": true,
-    "strictNullChecks": false,
-    "incremental": true,
-    "noImplicitAny": false,
-    "baseUrl": ".",
-    "paths": {
-      "@api/*": ["./src/api/*"],
-      "@cache/*": ["./src/cache/*"],
-      "@config/*": ["./src/config/*"],
-      "@exceptions": ["./src/exceptions"],
-      "@libs/*": ["./src/libs/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@validate/*": ["./src/validate/*"]
-    },
-    "moduleResolution": "Node"
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
   },
-  "exclude": ["node_modules", "./test", "./dist", "./prisma"],
-  "include": [
-    "src/**/*",
-    "src/**/*.json"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }
